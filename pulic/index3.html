@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Feed</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .story-ring {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      padding: 3px;
+      border-radius: 50%;
+    }
+    
+    .story-inner {
+      background: white;
+      padding: 3px;
+      border-radius: 50%;
+    }
+    
+    .heart-animation {
+      animation: heartBeat 0.3s ease-in-out;
+    }
+    
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+    
+    .scroll-container {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    .petal {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .petal:nth-child(2) { animation-delay: 0.5s; }
+    .petal:nth-child(3) { animation-delay: 1s; }
+    .petal:nth-child(4) { animation-delay: 1.5s; }
+    .petal:nth-child(5) { animation-delay: 2s; }
+
+    .vertical-text {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="w-full h-full" style="background-color: #fafafa;"><!-- Header -->
+   <header class="sticky top-0 z-50" style="background-color: #ffffff; border-bottom: 1px solid #dbdbdb;">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+     <h1 id="app-title" class="text-2xl font-semibold" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+      映え句</h1>
+     <div class="flex items-center gap-6"><button class="hover:opacity-60 transition-opacity">
+       <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+       </svg></button> <button class="hover:opacity-60 transition-opacity">
+       <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect> <rect x="14" y="3" width="7" height="7"></rect> <rect x="14" y="14" width="7" height="7"></rect> <rect x="3" y="14" width="7" height="7"></rect>
+       </svg></button> <button class="hover:opacity-60 transition-opacity">
+       <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path> <polyline points="22,6 12,13 2,6"></polyline>
+       </svg></button> <button class="hover:opacity-60 transition-opacity">
+       <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+       </svg></button>
+      <div class="w-8 h-8 rounded-full overflow-hidden cursor-pointer" style="background-color: #e1306c;">
+       <div class="w-full h-full flex items-center justify-center text-white text-sm font-semibold">
+        U
+       </div>
+      </div>
+     </div>
+    </div>
+   </header>
+   <div class="max-w-7xl mx-auto flex gap-8 px-4 py-8"><!-- Left Sidebar Menu -->
+    <aside class="w-64 hidden lg:block">
+     <div class="sticky top-20"><!-- User Profile -->
+      <div class="flex items-center gap-3 mb-8">
+       <div class="w-14 h-14 rounded-full overflow-hidden" style="background-color: #e1306c;">
+        <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+         U
+        </div>
+       </div>
+       <div class="flex-1">
+        <p id="sidebar-username" class="font-semibold text-sm">NT Ánh Trinh</p>
+        <p id="sidebar-fullname" class="text-gray-500 text-sm">@ánhtrinh</p>
+       </div>
+      </div><!-- Menu Navigation -->
+      <nav class="space-y-2 mb-8"><button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none"></path>
+        </svg><span class="font-medium">ホーム</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle> <path d="m21 21-4.35-4.35"></path>
+        </svg><span class="font-medium">検索</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect> <rect x="14" y="3" width="7" height="7"></rect> <rect x="14" y="14" width="7" height="7"></rect> <rect x="3" y="14" width="7" height="7"></rect>
+        </svg><span class="font-medium">発見</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect> <polyline points="17 2 12 7 7 2"></polyline>
+        </svg><span class="font-medium">メッセージ</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg><span class="font-medium">通知</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect> <circle cx="8.5" cy="8.5" r="1.5"></circle> <polyline points="21 15 16 10 5 21"></polyline>
+        </svg><span class="font-medium">作成</span> </button> <button class="w-full flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+        <div class="w-6 h-6 rounded-full overflow-hidden" style="background-color: #e1306c;">
+         <div class="w-full h-full flex items-center justify-center text-white text-xs font-bold">
+          U
+         </div>
+        </div><span class="font-medium">プロフィール</span> </button>
+      </nav><!-- Footer -->
+      <div class="text-xs text-gray-400 space-y-2">
+       <div class="flex flex-wrap gap-2"><a href="#" class="hover:underline">概要</a> <span>·</span> <a href="#" class="hover:underline">ヘルプ</a> <span>·</span> <a href="#" class="hover:underline">API</a>
+       </div>
+       <p>© 2024 SOCIAL FEED</p>
+      </div>
+     </div>
+    </aside><!-- Main Feed -->
+    <main class="flex-1 max-w-[630px]"><!-- Stories -->
+     <div class="bg-white rounded-lg border mb-6 p-4 overflow-hidden" style="border-color: #dbdbdb;">
+      <div class="flex gap-4 overflow-x-auto scroll-container pb-2">
+       <div class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
+        <div class="story-ring">
+         <div class="story-inner">
+          <div class="w-14 h-14 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+           <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+            あ
+           </div>
+          </div>
+         </div>
+        </div><span class="text-xs">あなたのストーリー</span>
+       </div>
+       <div class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
+        <div class="story-ring">
+         <div class="story-inner">
+          <div class="w-14 h-14 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+           <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+            さ
+           </div>
+          </div>
+         </div>
+        </div><span class="text-xs">さくら写真</span>
+       </div>
+       <div class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
+        <div class="story-ring">
+         <div class="story-inner">
+          <div class="w-14 h-14 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+           <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+            マ
+           </div>
+          </div>
+         </div>
+        </div><span class="text-xs">旅するマーク</span>
+       </div>
+       <div class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
+        <div class="story-ring">
+         <div class="story-inner">
+          <div class="w-14 h-14 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+           <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+            サ
+           </div>
+          </div>
+         </div>
+        </div><span class="text-xs">サラフィット</span>
+       </div>
+       <div class="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer">
+        <div class="story-ring">
+         <div class="story-inner">
+          <div class="w-14 h-14 rounded-full overflow-hidden" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+           <div class="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+            ジ
+           </div>
+          </div>
+         </div>
+        </div><span class="text-xs">ジョンフード</span>
+       </div>
+      </div>
+     </div><!-- Posts -->
+     <div id="posts-container" class="space-y-6"></div>
+    </main><!-- Right Sidebar -->
+    <aside class="w-80 hidden xl:block">
+     <div class="sticky top-20"><!-- Top Users Leaderboard -->
+      <div id="leaderboard-container" class="mb-6 bg-white rounded-lg border p-4" style="border-color: #dbdbdb;">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-sm flex items-center gap-2"><span style="font-size: 18px;">🏆</span> トップユーザー</h3>
+       </div>
+       <div id="leaderboard-list" class="space-y-3"><!-- Leaderboard will be rendered here -->
+       </div>
+      </div><!-- Suggestions -->
+      <div class="mb-4">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="text-gray-500 font-semibold text-sm">おすすめ</h3><button class="text-xs font-semibold hover:text-gray-500">すべて見る</button>
+       </div>
+       <div class="space-y-3">
+        <div class="flex items-center gap-3">
+         <div class="w-10 h-10 rounded-full" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="w-full h-full flex items-center justify-center text-white text-sm font-bold">
+           エ
+          </div>
+         </div>
+         <div class="flex-1">
+          <p class="font-semibold text-sm">エミリーデザイン</p>
+          <p class="text-gray-500 text-xs">さくら写真がフォロー中</p>
+         </div><button class="text-blue-500 text-xs font-semibold hover:text-blue-700">フォロー</button>
+        </div>
+        <div class="flex items-center gap-3">
+         <div class="w-10 h-10 rounded-full" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+          <div class="w-full h-full flex items-center justify-center text-white text-sm font-bold">
+           デ
+          </div>
+         </div>
+         <div class="flex-1">
+          <p class="font-semibold text-sm">デイビッドコード</p>
+          <p class="text-gray-500 text-xs">旅するマークがフォロー中</p>
+         </div><button class="text-blue-500 text-xs font-semibold hover:text-blue-700">フォロー</button>
+        </div>
+        <div class="flex items-center gap-3">
+         <div class="w-10 h-10 rounded-full" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+          <div class="w-full h-full flex items-center justify-center text-white text-sm font-bold">
+           リ
+          </div>
+         </div>
+         <div class="flex-1">
+          <p class="font-semibold text-sm">リサアート</p>
+          <p class="text-gray-500 text-xs">サラフィットがフォロー中</p>
+         </div><button class="text-blue-500 text-xs font-semibold hover:text-blue-700">フォロー</button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </aside>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      app_title: "インスタクローン",
+      username: "あなたのユーザー名",
+      user_fullname: "あなたの名前",
+      background_color: "#fafafa",
+      surface_color: "#ffffff",
+      text_color: "#262626",
+      primary_action_color: "#0095f6",
+      accent_color: "#e1306c",
+      font_family: "Segoe UI",
+      font_size: 14
+    };
+
+    const posts = [
+      {
+        id: 1,
+        username: "さくら写真",
+        userColor: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+        userInitial: "さ",
+        time: "2時間前",
+        imageType: "sakura",
+        haikuLine1: "桜散る",
+        haikuLine2: "風に舞う花びら",
+        haikuLine3: "春来たり",
+        caption: "日本の桜の季節 - 花びらがピンクの雪のように優しく舞い落ちる美しい瞬間。桜はいつも私たちに人生の儚い美しさを思い出させてくれます 🌸💕",
+        likes: 1234,
+        comments: 56,
+        liked: false,
+        saved: false
+      },
+      {
+        id: 2,
+        username: "旅するマーク",
+        userColor: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+        userInitial: "マ",
+        time: "5時間前",
+        imageGradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+        haikuLine1: "高き山々",
+        haikuLine2: "白雲ゆったりと",
+        haikuLine3: "心も旅す",
+        caption: "ファンシーパン山頂 - インドシナの屋根。標高3143mの挑戦的な登山でしたが、一歩一歩が価値あるものでした！ 🏔️⛰️",
+        likes: 892,
+        comments: 34,
+        liked: false,
+        saved: false
+      },
+      {
+        id: 3,
+        username: "サラフィット",
+        userColor: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+        userInitial: "サ",
+        time: "8時間前",
+        imageGradient: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
+        haikuLine1: "朝目覚めて",
+        haikuLine2: "体動き始め",
+        haikuLine3: "エネルギー満つ",
+        caption: "ダナンビーチでの朝のヨガ。ポジティブなエネルギーで新しい一日を始めるのに勝るものはありません！ 🧘‍♀️💪",
+        likes: 2156,
+        comments: 89,
+        liked: false,
+        saved: false
+      }
+    ];
+
+    function createMiniSakuraSVG() {
+      return `
+        <svg width="100%" height="100%" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="miniSkyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffd4e5;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ffe5f0;stop-opacity:1" />
+            </linearGradient>
+            
+            <linearGradient id="miniPetalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffb3d9;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ff80bf;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          
+          <rect width="600" height="600" fill="url(#miniSkyGradient)"/>
+          
+          <path d="M50 150 Q200 180 350 150 T550 180" stroke="#8B4513" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M150 200 Q180 220 200 250" stroke="#8B4513" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M350 180 Q380 200 400 230" stroke="#8B4513" stroke-width="5" fill="none" stroke-linecap="round"/>
+          
+          <g transform="translate(150, 150)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+          </g>
+          
+          <g transform="translate(250, 160)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+          </g>
+          
+          <g transform="translate(350, 155)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#miniPetalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#miniPetalGradient)" opacity="0.9"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    function renderLeaderboard() {
+      const config = window.elementSdk?.config || defaultConfig;
+      const container = document.getElementById('leaderboard-list');
+      if (!container) return;
+      
+      const textColor = config.text_color || defaultConfig.text_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'Arial, sans-serif';
+      
+      // Sort posts by likes
+      const sortedPosts = [...posts].sort((a, b) => b.likes - a.likes);
+      
+      const medalColors = {
+        1: { border: '#ffd700', bg: 'rgba(255, 215, 0, 0.1)', text: '#ffd700' },
+        2: { border: '#c0c0c0', bg: 'rgba(192, 192, 192, 0.1)', text: '#c0c0c0' },
+        3: { border: '#cd7f32', bg: 'rgba(205, 127, 50, 0.1)', text: '#cd7f32' }
+      };
+      
+      container.innerHTML = sortedPosts.map((post, index) => {
+        const rank = index + 1;
+        const isTopThree = rank <= 3;
+        const medal = medalColors[rank];
+        
+        if (isTopThree) {
+          return `
+            <div class="rounded-lg overflow-hidden" style="border: 2px solid ${medal.border}; background: ${medal.bg};">
+              <!-- Post Image with Haiku -->
+              <div class="w-full aspect-square relative" style="${post.imageType === 'sakura' ? '' : 'background: ' + post.imageGradient + ';'}">
+                ${post.imageType === 'sakura' ? createMiniSakuraSVG() : ''}
+                <div class="absolute top-4 right-6 flex gap-4">
+                  <div class="vertical-text">
+                    <p class="text-white text-sm font-medium" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.8); letter-spacing: 0.2em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine1}</p>
+                  </div>
+                  <div class="vertical-text">
+                    <p class="text-white text-sm font-medium" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.8); letter-spacing: 0.2em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine2}</p>
+                  </div>
+                  <div class="vertical-text">
+                    <p class="text-white text-sm font-medium" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.8); letter-spacing: 0.2em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine3}</p>
+                  </div>
+                </div>
+                
+                <!-- Rank Badge -->
+                <div class="absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style="background: ${medal.border}; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                  ${rank}
+                </div>
+              </div>
+              
+              <!-- User Info -->
+              <div class="p-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full" style="background: ${post.userColor};">
+                    <div class="w-full h-full flex items-center justify-center text-white text-xs font-bold">${post.userInitial}</div>
+                  </div>
+                  <p class="font-semibold text-sm" style="color: ${textColor}; font-family: ${customFont}, ${baseFontStack};">${post.username}</p>
+                </div>
+                <p class="text-xs flex items-center gap-1" style="color: ${accentColor};">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="${accentColor}">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                  ${post.likes.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          `;
+        } else {
+          return '';
+        }
+      }).join('');
+    }
+
+    function createSakuraSVG() {
+      return `
+        <svg width="100%" height="100%" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffd4e5;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ffe5f0;stop-opacity:1" />
+            </linearGradient>
+            
+            <linearGradient id="petalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ffb3d9;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ff80bf;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          
+          <!-- Background -->
+          <rect width="600" height="600" fill="url(#skyGradient)"/>
+          
+          <!-- Branch -->
+          <path d="M50 150 Q200 180 350 150 T550 180" stroke="#8B4513" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M150 200 Q180 220 200 250" stroke="#8B4513" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M350 180 Q380 200 400 230" stroke="#8B4513" stroke-width="5" fill="none" stroke-linecap="round"/>
+          
+          <!-- Cherry Blossoms on Branch -->
+          <!-- Flower 1 -->
+          <g transform="translate(150, 150)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="8" cy="-8" rx="10" ry="10" fill="url(#petalGradient)" opacity="0.85"/>
+          </g>
+          
+          <!-- Flower 2 -->
+          <g transform="translate(250, 160)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-8" cy="8" rx="10" ry="10" fill="url(#petalGradient)" opacity="0.85"/>
+          </g>
+          
+          <!-- Flower 3 -->
+          <g transform="translate(350, 155)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="8" cy="8" rx="10" ry="10" fill="url(#petalGradient)" opacity="0.85"/>
+          </g>
+          
+          <!-- Flower 4 -->
+          <g transform="translate(450, 170)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-8" cy="-8" rx="10" ry="10" fill="url(#petalGradient)" opacity="0.85"/>
+          </g>
+          
+          <!-- Flower on small branch -->
+          <g transform="translate(200, 250)">
+            <circle cx="0" cy="0" r="4" fill="#fff5cc"/>
+            <ellipse cx="0" cy="-12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="0" cy="12" rx="8" ry="12" fill="url(#petalGradient)" opacity="0.9"/>
+            <ellipse cx="-12" cy="0" rx="12" ry="8" fill="url(#petalGradient)" opacity="0.9"/>
+          </g>
+          
+          <!-- Falling Petals -->
+          <g class="petal" opacity="0.8">
+            <ellipse cx="120" cy="320" rx="6" ry="10" fill="url(#petalGradient)" transform="rotate(45 120 320)"/>
+          </g>
+          <g class="petal" opacity="0.7">
+            <ellipse cx="300" cy="380" rx="7" ry="11" fill="url(#petalGradient)" transform="rotate(-30 300 380)"/>
+          </g>
+          <g class="petal" opacity="0.8">
+            <ellipse cx="450" cy="340" rx="6" ry="10" fill="url(#petalGradient)" transform="rotate(60 450 340)"/>
+          </g>
+          <g class="petal" opacity="0.6">
+            <ellipse cx="200" cy="450" rx="5" ry="9" fill="url(#petalGradient)" transform="rotate(-45 200 450)"/>
+          </g>
+          <g class="petal" opacity="0.7">
+            <ellipse cx="380" cy="480" rx="6" ry="10" fill="url(#petalGradient)" transform="rotate(20 380 480)"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    function renderPosts() {
+      const config = window.elementSdk?.config || defaultConfig;
+      const container = document.getElementById('posts-container');
+      const textColor = config.text_color || defaultConfig.text_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'Arial, sans-serif';
+      
+      container.innerHTML = posts.map(post => `
+        <article class="bg-white rounded-lg border" style="border-color: #dbdbdb; background-color: ${surfaceColor};">
+          <!-- Post Header -->
+          <div class="flex items-center justify-between p-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full" style="background: ${post.userColor};">
+                <div class="w-full h-full flex items-center justify-center text-white text-sm font-bold">${post.userInitial}</div>
+              </div>
+              <div>
+                <p class="font-semibold" style="font-size: ${baseSize}px; color: ${textColor}; font-family: ${customFont}, ${baseFontStack};">${post.username}</p>
+                <p class="text-xs" style="color: ${textColor}; opacity: 0.6;">${post.time}</p>
+              </div>
+            </div>
+            <button class="hover:opacity-60">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="${textColor}">
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="12" cy="6" r="1.5"></circle>
+                <circle cx="12" cy="18" r="1.5"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Post Image with Haiku -->
+          <div class="w-full aspect-square relative" style="${post.imageType === 'sakura' ? '' : 'background: ' + post.imageGradient + ';'}">
+            ${post.imageType === 'sakura' ? createSakuraSVG() : ''}
+            <div class="absolute top-8 right-12 flex gap-8">
+              <div class="vertical-text">
+                <p class="text-white text-xl md:text-2xl font-medium" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.3em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine1}</p>
+              </div>
+              <div class="vertical-text">
+                <p class="text-white text-xl md:text-2xl font-medium" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.3em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine2}</p>
+              </div>
+              <div class="vertical-text">
+                <p class="text-white text-xl md:text-2xl font-medium" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.3em; font-family: ${customFont}, ${baseFontStack};">${post.haikuLine3}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post Actions -->
+          <div class="p-3">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-4">
+                <button class="like-btn hover:opacity-60 transition-opacity" data-post-id="${post.id}">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="${post.liked ? accentColor : 'none'}" stroke="${post.liked ? accentColor : textColor}" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+                <button class="hover:opacity-60 transition-opacity">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${textColor}" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </button>
+                <button class="hover:opacity-60 transition-opacity">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${textColor}" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+              <button class="save-btn hover:opacity-60 transition-opacity" data-post-id="${post.id}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="${post.saved ? textColor : 'none'}" stroke="${textColor}" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Likes -->
+            <p class="font-semibold mb-2 likes-count" style="font-size: ${baseSize}px; color: ${textColor}; font-family: ${customFont}, ${baseFontStack};" data-post-id="${post.id}">いいね！${post.likes.toLocaleString()}件</p>
+
+            <!-- Caption -->
+            <p style="font-size: ${baseSize}px; color: ${textColor}; font-family: ${customFont}, ${baseFontStack};">
+              <span class="font-semibold">${post.username}</span> ${post.caption}
+            </p>
+
+            <!-- Comments -->
+            <button class="text-gray-500 mt-2 hover:text-gray-700" style="font-size: ${baseSize * 0.93}px;">
+              コメント${post.comments}件をすべて表示
+            </button>
+
+            <!-- Add Comment -->
+            <div class="flex items-center gap-3 mt-3 pt-3" style="border-top: 1px solid #efefef;">
+              <input type="text" placeholder="コメントを追加..." class="flex-1 outline-none" style="font-size: ${baseSize}px; color: ${textColor}; font-family: ${customFont}, ${baseFontStack}; background: transparent;">
+              <button class="font-semibold" style="color: ${primaryColor}; font-size: ${baseSize}px;">投稿</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      // Add event listeners for like buttons
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const postId = parseInt(btn.dataset.postId);
+          const post = posts.find(p => p.id === postId);
+          const svg = btn.querySelector('svg');
+          
+          if (post) {
+            post.liked = !post.liked;
+            post.likes += post.liked ? 1 : -1;
+            
+            svg.setAttribute('fill', post.liked ? accentColor : 'none');
+            svg.setAttribute('stroke', post.liked ? accentColor : textColor);
+            
+            if (post.liked) {
+              svg.classList.add('heart-animation');
+              setTimeout(() => svg.classList.remove('heart-animation'), 300);
+            }
+            
+            const likesCount = document.querySelector(`.likes-count[data-post-id="${postId}"]`);
+            if (likesCount) {
+              likesCount.textContent = `いいね！${post.likes.toLocaleString()}件`;
+            }
+            
+            // Update leaderboard when likes change
+            renderLeaderboard();
+          }
+        });
+      });
+
+      // Add event listeners for save buttons
+      document.querySelectorAll('.save-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const postId = parseInt(btn.dataset.postId);
+          const post = posts.find(p => p.id === postId);
+          const svg = btn.querySelector('svg');
+          
+          if (post) {
+            post.saved = !post.saved;
+            svg.setAttribute('fill', post.saved ? textColor : 'none');
+          }
+        });
+      });
+    }
+
+    async function onConfigChange(config) {
+      const appTitle = document.getElementById('app-title');
+      const sidebarUsername = document.getElementById('sidebar-username');
+      const sidebarFullname = document.getElementById('sidebar-fullname');
+      const appContainer = document.getElementById('app');
+      
+      if (appTitle) {
+        appTitle.textContent = config.app_title || defaultConfig.app_title;
+        appTitle.style.fontFamily = `${config.font_family || defaultConfig.font_family}, Arial, sans-serif`;
+        appTitle.style.fontSize = `${(config.font_size || defaultConfig.font_size) * 1.7}px`;
+        appTitle.style.color = config.text_color || defaultConfig.text_color;
+      }
+      
+      if (sidebarUsername) {
+        sidebarUsername.textContent = config.username || defaultConfig.username;
+        sidebarUsername.style.fontFamily = `${config.font_family || defaultConfig.font_family}, Arial, sans-serif`;
+        sidebarUsername.style.fontSize = `${(config.font_size || defaultConfig.font_size) * 0.93}px`;
+        sidebarUsername.style.color = config.text_color || defaultConfig.text_color;
+      }
+      
+      if (sidebarFullname) {
+        sidebarFullname.textContent = config.user_fullname || defaultConfig.user_fullname;
+        sidebarFullname.style.fontFamily = `${config.font_family || defaultConfig.font_family}, Arial, sans-serif`;
+        sidebarFullname.style.fontSize = `${(config.font_size || defaultConfig.font_size) * 0.93}px`;
+      }
+      
+      if (appContainer) {
+        appContainer.style.backgroundColor = config.background_color || defaultConfig.background_color;
+      }
+      
+      renderPosts();
+      renderLeaderboard();
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => {
+                config.accent_color = value;
+                window.elementSdk.setConfig({ accent_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["app_title", config.app_title || defaultConfig.app_title],
+          ["username", config.username || defaultConfig.username],
+          ["user_fullname", config.user_fullname || defaultConfig.user_fullname]
+        ])
+      });
+    }
+
+    renderPosts();
+    renderLeaderboard();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9afc339e05fcf2d6',t:'MTc2NjAzNTEyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

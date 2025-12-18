@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>映え句</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #fbc8d4, #fddde6, #e0f2f1);
+      color: #333;
+      display: grid;
+      grid-template-columns: 240px 1fr 320px;
+      min-height: 100vh;
+    }
+
+   /* Sidebar */
+    .sidebar {
+      border-right: 1px solid rgba(255,255,255,0.15);
+      padding: 20px;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(8px);
+    }
+    .logo { font-size: 26px; font-weight: bold; margin-bottom: 30px; }
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 6px;
+      color: #333;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    .menu a svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    .menu a:hover {
+      background: rgba(255,255,255,0.6);
+    }
+    .menu a.active {
+      font-weight: bold;
+    }
+    .menu a:hover { opacity: 0.7; }
+
+    /* Main */
+    .main { padding: 20px 0; }
+
+    /* Stories */
+    .stories {
+      display: flex; gap: 16px;
+      padding: 0 20px 20px;
+      overflow-x: auto;
+    }
+    .story {
+      text-align: center;
+      font-size: 12px;
+    }
+    .story img {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 3px solid #ff9aa2;
+      object-fit: cover;
+      margin-bottom: 6px;
+    }
+
+    /* Feed */
+    .feed {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .post {
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(6px);
+    }
+    .post-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px;
+    }
+    .post-header img {
+      width: 36px; height: 36px;
+      border-radius: 50%; object-fit: cover;
+    }
+    .post img.post-img {
+      width: 100%; display: block;
+    }
+    .post-actions {
+      padding: 10px 12px;
+      font-size: 20px;
+      display: flex; gap: 14px;
+      cursor: pointer;
+    }
+    .post-actions span:hover { opacity: 0.7; }
+    .post-caption {
+      padding: 0 12px 12px;
+      font-size: 14px;
+    }
+
+    /* Right */
+    .right {
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 20px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(8px);
+    }
+    .profile {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
+    }
+    .profile img {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+    }
+    .suggest h4 { margin-bottom: 12px; color: #777; }
+    .suggest-item {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .suggest-item img {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .follow { color: #0095f6; cursor: pointer; }
+
+    @media (max-width: 1100px) {
+      body { grid-template-columns: 240px 1fr; }
+      .right { display: none; }
+    }
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+    .create-post {
+      max-width: 500px;
+      margin: 0 auto 20px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .create-post .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .create-post input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #555;
+    }
+    .create-icons span {
+      font-size: 18px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    .create-icons span:hover { opacity: 0.7; }
+    .create-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+</style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo"> 映え句</div>
+    <div class="menu">
+      <a href="#" class="active">
+        <svg viewBox="0 0 24 24"><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5a3 3 0 0 0-6 0v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11a1 1 0 0 1 .293-.707l10-10a1 1 0 0 1 1.414 0l10 10A1 1 0 0 1 23 11v11a1 1 0 0 1-1 1Z"/></svg>
+        ホーム
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        検索
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        発見
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        リール
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        メッセージ
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-8-4.438-8-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.562-8 11-8 11z"/></svg>
+        お知らせ
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        作成
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>
+        プロフィール
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        もっと見る
+      </a>
+    </div>
+  </div>
+
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Create Post -->
+    <div class="create-post">
+      <img class="avatar" src="https://i.pravatar.cc/100?img=5">
+      <div class="create-content">
+<input type="text" placeholder="Trinh ơi, bạn đang nghĩ gì thế?">
+      <textarea placeholder="Viết chú thích cho hình ảnh (caption)..."></textarea>
+      </div>
+      
+      <div class="create-icons">
+        <span title="Ảnh">📷</span>
+        <span title="Sticker">🖼️</span>
+        <span title="Video">🎬</span>
+      </div>
+    </div>
+   
+
+    <div class="feed">
+      <!-- Post 1 -->
+      <div class="post">
+        <div class="post-header">
+          <img src="https://picsum.photos/100?5">
+          <strong>rkive</strong>
+        </div>
+        <img class="post-img" src="https://picsum.photos/500/400?6">
+        <div class="post-actions">
+          <span onclick="like(this)">🤍</span>
+          <span>💬</span>
+          <span>📤</span>
+        </div>
+        <div class="post-caption">
+          <strong>rkive</strong> 静かな一日 🌙<br>
+          <span style="color:#aaa">長い一日の終わりに、すべてがゆっくりと落ち着く瞬間を写した写真です。</span>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="post">
+        <div class="post-header">
+          <img src="https://picsum.photos/100?10">
+          <strong>thv</strong>
+        </div>
+        <img class="post-img" src="https://picsum.photos/500/400?11">
+        <div class="post-actions">
+          <span onclick="like(this)">🤍</span>
+          <span>💬</span>
+          <span>📤</span>
+        </div>
+        <div class="post-caption">
+          <strong>thv</strong> 夜の街 ✨<br>
+          <span style="color:#aaa">夜の光と空気が、にぎやかさと少しの寂しさを感じさせます。</span>
+        </div>
+      </div>
+
+      <!-- Post 3 -->
+      <div class="post">
+        <div class="post-header">
+          <img src="https://picsum.photos/100?12">
+          <strong>mejiwoo103</strong>
+        </div>
+        <img class="post-img" src="https://picsum.photos/500/400?13">
+        <div class="post-actions">
+          <span onclick="like(this)">🤍</span>
+          <span>💬</span>
+          <span>📤</span>
+        </div>
+        <div class="post-caption">
+          <strong>mejiwoo103</strong> 日常のひととき 🌿<br>
+          <span style="color:#aaa">シンプルですが、親しみやすくやさしい気持ちになる写真です。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div class="right">
+    <div class="profile">
+      <img src="https://picsum.photos/100?7">
+      <div>
+        <strong>nt_anh_trinh</strong><br>
+        <span style="color:#aaa">Nt Ánh Trinh</span>
+      </div>
+    </div>
+
+    <div class="suggest">
+      <h4>おすすめ</h4>
+      <div class="suggest-item">
+        <div style="display:flex;align-items:center">
+          <img src="https://picsum.photos/100?8"> phuoc_161
+        </div>
+        <div class="follow">フォロー</div>
+      </div>
+      <div class="suggest-item">
+        <div style="display:flex;align-items:center">
+          <img src="https://picsum.photos/100?9"> vt_ngoctuyen
+        </div>
+        <div class="follow">フォロー</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Avatar mặc định theo username
+  const avatarMap = {
+    rkive: 'https://i.pravatar.cc/100?img=12',
+    thv: 'https://i.pravatar.cc/100?img=32',
+    mejiwoo103: 'https://i.pravatar.cc/100?img=47',
+    nt_anh_trinh: 'https://i.pravatar.cc/100?img=5',
+    phuoc_161: 'https://i.pravatar.cc/100?img=18',
+    vt_ngoctuyen: 'https://i.pravatar.cc/100?img=22'
+  };
+
+  // Gán avatar đúng theo tên người dùng
+  document.querySelectorAll('.post-header').forEach(header => {
+    const name = header.querySelector('strong')?.textContent;
+    const img = header.querySelector('img');
+    if (avatarMap[name]) img.src = avatarMap[name];
+  });
+
+  document.querySelectorAll('.profile strong').forEach(el => {
+    const name = el.textContent;
+    const img = el.closest('.profile').querySelector('img');
+    if (avatarMap[name]) img.src = avatarMap[name];
+  });
+
+  document.querySelectorAll('.suggest-item').forEach(item => {
+    const text = item.textContent.trim();
+    const name = Object.keys(avatarMap).find(u => text.includes(u));
+    const img = item.querySelector('img');
+    if (avatarMap[name]) img.src = avatarMap[name];
+  });
+
+  function like(el) {
+    el.textContent = el.textContent === '🤍' ? '❤️' : '🤍';
+  }
+</script>
+
+</body>
+</html>

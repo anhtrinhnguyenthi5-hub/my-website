@@ -1,0 +1,250 @@
+ * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: #f8dfec;
+      color: #2f3e34;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr 300px;
+      min-height: 100vh;
+    }
+    /* LEFT */
+    .sidebar {
+      background: #f5ebf0;
+      padding: 24px;
+      border-right: 1px solid #e5e2dc;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffd1dc, #ff9eb5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(255,158,181,0.45);
+    }
+    .logo-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+    }
+    .search {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #f0eee9;
+      margin-bottom: 24px;
+    }
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #2f3e34;
+    }
+    .menu a.active,
+    .menu a:hover { background: #e7ece7; }
+
+    /* CENTER */
+    .feed {
+      padding: 40px 24px;
+    }
+    .post {
+      background: #e3ebf2;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      max-width: 720px;
+      margin: auto;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #cfd8cf;
+    }
+    .image-wrap{display:flex;gap:24px;align-items:flex-start;margin:16px 0;}
+    .post img{
+      width:70%;
+      border-radius:16px;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+    .haiku{
+      writing-mode:vertical-rl;
+      font-size:20px;
+      line-height:1.8;
+    }
+    .desc1 {
+      writing-mode: vertical-rl;
+     font-size: 14px;
+      color: black;
+      margin-top: 12px;
+    }
+
+    /* .desc {
+      font-size: 14px;
+      color: #6b7c6b;
+      margin-top: 12px;
+    } */
+    .desc {
+  width: 35%;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #e36b3f;
+}
+    .actions{
+      display:flex;
+      gap:32px;
+      margin-top:16px;
+      padding-top:12px;
+      align-items:center;
+      color:#7a8a7d;
+      font-size:14px;
+    }
+    .action-btn{
+      background:none;
+      border:none;
+      cursor:pointer;
+      color:#4a5d50;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .action-btn:hover{color:#e36b3f;}
+    /* RIGHT */
+    /* .right {
+      padding: 32px 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    }
+    .follow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 2px solid #3f6f55;
+      background: none;
+      color: #3f6f55;
+      cursor: pointer;
+    }
+    .hint {
+      border-left: 5px solid #e36b3f;
+    } */
+     /* RIGHT */
+    .right {
+      padding: 32px 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    }
+    .follow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.follow-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sakura-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff0f6;
+  padding: 4px;
+}
+
+    .btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 2px solid #3f6f55;
+      background: none;
+      color: #3f6f55;
+      cursor: pointer;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .login-form label {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      color: #6b7c6b;
+    }
+    .login-form input {
+      margin-top: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e0ddd6;
+      font-size: 14px;
+    }
+    .login-form input:focus {
+      outline: none;
+      border-color: #ff9fb5;
+    }
+    .login-btn {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 20px;
+      border: none;
+      background: linear-gradient(135deg, #ffd6e1, #ff9fb5);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .login-btn:hover {
+      opacity: 0.9;
+    }
+    .login-note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #8a8a8a;
+    }
+    .login-note a {
+      color: #ff7fa0;
+      text-decoration: none;
+    }
+    .hint {
+      border-left: 5px solid #e36b3f;
+    }

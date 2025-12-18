@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Facebook</title>
+  <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Tạo bài viết -->
+  <div class="post-box">
+    <h3>Tạo bài viết</h3>
+
+    <div class="user-info">
+      <img src="https://i.pravatar.cc/50" class="avatar">
+      <span class="username">Anh Trinh</span>
+    </div>
+
+    <textarea id="content" placeholder="Bạn đang nghĩ gì?"></textarea>
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="addPost()">Đăng</button>
+  </div>
+
+  <!-- Bảng tin -->
+  <div class="feed" id="feed">
+    <h3>Bảng tin</h3>
+  </div>
+
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
